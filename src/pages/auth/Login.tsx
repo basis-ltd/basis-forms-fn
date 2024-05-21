@@ -4,6 +4,9 @@ import { Controller, FieldValues, useForm } from 'react-hook-form';
 import Button from '@/components/inputs/Button';
 import { ResponseErrorType, useLoginMutation } from '@/state/api/apiSlice';
 import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+import Loader from '@/components/inputs/Loader';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   // REACT HOOK FORM
@@ -12,6 +15,9 @@ const Login = () => {
     control,
     formState: { errors },
   } = useForm();
+
+  // NAVIGATE
+  const navigate = useNavigate();
 
   // INITIALIZE LOGIN REQUEST
   const [
@@ -37,14 +43,17 @@ const Login = () => {
   useEffect(() => {
     if (loginIsError) {
       if ((loginError as ResponseErrorType)?.status === 500) {
-        alert('Server Error');
+        toast.error('An error occurred. Please try again later.');
       } else {
-        alert((loginError as ResponseErrorType)?.data?.message);
+        toast.error((loginError as ResponseErrorType)?.data?.message);
       }
     } else if (loginIsSuccess) {
-      alert(JSON.stringify(loginData));
+      toast.success('Login successful!');
+      if (loginData?.user?.role === 'admin') {
+        navigate('/admin/dashboard');
+      }
     }
-  }, [loginData, loginIsError, loginError, loginIsSuccess]);
+  }, [loginData, loginIsError, loginError, loginIsSuccess, navigate]);
 
   return (
     <main className="w-full h-[100vh] flex items-center justify-center p-4 bg-primary">
@@ -106,7 +115,7 @@ const Login = () => {
               );
             }}
           />
-          <Button submit primary>{loginIsLoading ? 'Loading...' : 'Login'}</Button>
+          <Button submit primary>{loginIsLoading ? <Loader /> : 'Login'}</Button>
         </form>
       </section>
     </main>
