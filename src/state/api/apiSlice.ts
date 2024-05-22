@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { ErrorResponse } from 'react-router-dom';
 
-export interface ResponseErrorType {
+export interface ResponseErrorType extends ErrorResponse {
   status: number;
   data: {
     message: string;
@@ -47,10 +48,14 @@ export const apiSlice = createApi({
         }),
       }),
 
+      // LIST USERS
+      listUsers: builder.query({
+        query: ({ role }) => `/users?role=${role}`,
+      }),
     };
   },
 });
 
-export const { useLoginMutation, useSignupMutation } =
+export const { useLoginMutation, useSignupMutation, useLazyListUsersQuery } =
   apiSlice;
 export default apiSlice;

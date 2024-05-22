@@ -5,7 +5,7 @@ import DateRangePicker from "../inputs/DateRangePicker";
 import { DataTableFacetedFilter } from "./FacetedFilter";
 import { DateRange } from "react-day-picker";
 import moment from "moment";
-import Select from "../inputs/Select";
+import Select from "../inputs/SingleSelect";
 import { capitalizeString } from "@/helpers/strings";
 import { Button } from "../ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -76,7 +76,7 @@ export default function TableToolbar<TData, TValue>({
 
   return (
     <section className="flex items-start justify-between gap-4 w-full">
-      <nav className="flex items-center flex-1 min-w-[50%] space-x-2">
+      <nav className="flex items-center flex-1 min-w-[60%] space-x-2">
         <menu className="flex items-center w-full gap-0">
           <Select
             value={searchType}

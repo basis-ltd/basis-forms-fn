@@ -5,6 +5,7 @@ import Navbar from '@/components/navigation/Navbar';
 import Sidebar from '@/components/navigation/Sidebar';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
+import ListUsers from './users/ListUsers';
 
 const Routes = () => {
   // STATE VARIABLES
@@ -21,11 +22,12 @@ const Routes = () => {
         } absolute transition-all ease-in-out duration-300 p-2 flex flex-col gap-2`}
       >
         <Navbar />
-        <section className="absolute w-full top-[10vh]">
+        <section className="absolute top-[10vh] w-[95%] ml-[2.5%]">
           <Router>
             <Route path="/auth/login" element={<Login />} />
             {/* PROTECTED ROUTES */}
             <Route path="/admin/dashboard" element={<SuperAdminDashboard />} />
+            <Route path="/admin/users" element={<ListUsers />} />
           </Router>
         </section>
       </body>

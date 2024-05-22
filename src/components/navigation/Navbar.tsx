@@ -31,8 +31,8 @@ const Navbar = () => {
   ];
 
   return (
-    <header className="h-[10vh] flex items-center gap-3 justify-between w-[95%] mx-auto relative">
-      <h1 className="text-2xl font-bold w-fit">Basis Forms</h1>
+    <header className="h-[8vh] flex items-center gap-3 justify-between w-[95%] mx-auto relative">
+      <h1 className="text-xl w-fit uppercase text-primary font-bold">Basis</h1>
       <Link
         to={'#'}
         onClick={(e) => {
@@ -77,7 +77,7 @@ export const NavDropdown = ({ isOpen, children }: NavDropdownTypes) => {
     <article
       className={`${
         isOpen ? 'translate-y-0' : 'translate-y-[-350px]'
-      } flex flex-col items-start gap-0 absolute top-[10vh] right-0 transition-all ease-in-out duration-300 w-fit z-[1000]`}
+      } flex flex-col items-start gap-0 absolute top-[8vh] right-0 transition-all ease-in-out duration-300 w-fit z-[10000] bg-white`}
     >
       {children}
     </article>

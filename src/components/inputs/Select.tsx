@@ -36,7 +36,7 @@ import {
   
     return (
       <label className={`flex flex-col gap-1 w-full ${labelClassName}`}>
-        <p className={label ? 'flex items-center gap-1 text-[14px]' : 'hidden'}>
+        <p className={label ? 'flex items-center gap-1 ml-1' : 'hidden'}>
           {label} <span className={required ? `text-red-600` : 'hidden'}>*</span>
         </p>
         <SelectComponent
