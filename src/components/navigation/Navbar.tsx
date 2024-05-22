@@ -76,8 +76,8 @@ export const NavDropdown = ({ isOpen, children }: NavDropdownTypes) => {
   return (
     <article
       className={`${
-        isOpen ? 'translate-y-0' : 'translate-y-[-250px]'
-      } flex flex-col items-start gap-0 absolute top-[10vh] right-0 transition-all ease-in-out duration-300 w-fit`}
+        isOpen ? 'translate-y-0' : 'translate-y-[-350px]'
+      } flex flex-col items-start gap-0 absolute top-[10vh] right-0 transition-all ease-in-out duration-300 w-fit z-[1000]`}
     >
       {children}
     </article>

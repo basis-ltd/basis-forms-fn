@@ -18,14 +18,16 @@ const Routes = () => {
       <body
         className={`${
           sidebarOpen ? 'w-[80vw] left-[20vw]' : 'w-[95vw] left-[5vw]'
-        } absolute transition-all ease-in-out duration-300 p-2`}
+        } absolute transition-all ease-in-out duration-300 p-2 flex flex-col gap-2`}
       >
         <Navbar />
-        <Router>
-          <Route path="/auth/login" element={<Login />} />
-          {/* PROTECTED ROUTES */}
-          <Route path="/admin/dashboard" element={<SuperAdminDashboard />} />
-        </Router>
+        <section className="absolute w-full top-[10vh]">
+          <Router>
+            <Route path="/auth/login" element={<Login />} />
+            {/* PROTECTED ROUTES */}
+            <Route path="/admin/dashboard" element={<SuperAdminDashboard />} />
+          </Router>
+        </section>
       </body>
     </main>
   );
