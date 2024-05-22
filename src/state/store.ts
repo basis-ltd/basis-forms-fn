@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import apiSlice from './api/apiSlice';
+import sidebarSlice from './features/sidebarSlice';
 
 export const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
+    sidebar: sidebarSlice,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(apiSlice.middleware);
