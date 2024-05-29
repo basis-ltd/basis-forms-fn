@@ -33,7 +33,7 @@ module.exports = {
       },
       colors: {
         primary: '#003C43',
-        dense: '#344955'
+        light: '#20546A'
       }
     },
   },

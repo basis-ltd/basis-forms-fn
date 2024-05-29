@@ -50,12 +50,36 @@ export const apiSlice = createApi({
 
       // LIST USERS
       fetchUsers: builder.query({
-        query: ({ role }) => `/users${role ? `?role=${role}` : ''}`,
+        query: ({
+          role,
+          institutionId,
+        }: {
+          role?: string;
+          institutionId?: string;
+        }) => {
+          let url = '/users';
+          if (role) {
+            url += `?role=${role}`;
+            return { url };
+          }
+          if (institutionId) {
+            url += `?institutionId=${institutionId}`;
+            return { url };
+          }
+          return { url };
+        },
       }),
 
       // CREATE USERS
       createUser: builder.mutation({
-        query: ({ email, firstName, lastName, institutionId, phone, role }) => ({
+        query: ({
+          email,
+          firstName,
+          lastName,
+          institutionId,
+          phone,
+          role,
+        }) => ({
           url: '/users',
           method: 'POST',
           body: {
@@ -71,7 +95,8 @@ export const apiSlice = createApi({
 
       // FETCH INSTITUTIONS
       fetchInstitutions: builder.query({
-        query: ({ categoryId }) => `/institutions${categoryId ? `?categoryId=${categoryId}` : ''}`,
+        query: ({ categoryId }) =>
+          `/institutions${categoryId ? `?categoryId=${categoryId}` : ''}`,
       }),
 
       // CREATE INSTITUTION
@@ -92,6 +117,39 @@ export const apiSlice = createApi({
       fetchCategories: builder.query({
         query: () => '/categories',
       }),
+
+      // FETCH FORMS
+      fetchForms: builder.query({
+        query: ({
+          institutionId,
+          userId,
+          projectId,
+        }: {
+          projectId?: string;
+          institutionId?: string;
+          status?: string;
+          userId?: string;
+        }) => {
+          let url = '/forms';
+          if (institutionId) {
+            url += `?institutionId=${institutionId}`;
+            return { url };
+          }
+          if (projectId && userId) {
+            url += `?projectId=${projectId}&userId=${userId}`;
+            return { url };
+          }
+          if (userId) {
+            url += `?userId=${userId}`;
+            return { url };
+          }
+          if (projectId) {
+            url += `?projectId=${projectId}`;
+            return { url };
+          }
+          return { url };
+        },
+      }),
     };
   },
 });
@@ -104,5 +162,6 @@ export const {
   useCreateUserMutation,
   useLazyFetchCategoriesQuery,
   useCreateInstitutionMutation,
+  useLazyFetchFormsQuery,
 } = apiSlice;
 export default apiSlice;

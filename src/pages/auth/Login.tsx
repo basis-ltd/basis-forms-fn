@@ -50,7 +50,7 @@ const Login = () => {
       }
     } else if (loginIsSuccess) {
       toast.success('Login successful!');
-      if (loginData?.user?.role === 'admin') {
+      if (['admin', 'super_admin'].includes(loginData?.user?.role)) {
         navigate('/admin/dashboard');
       }
     }

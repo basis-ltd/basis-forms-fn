@@ -25,7 +25,7 @@ const Navbar = () => {
     },
     {
       label: 'Logout',
-      path: '/auth/logout',
+      path: '/auth/login',
       icon: faArrowRight,
     },
   ];
@@ -55,6 +55,13 @@ const Navbar = () => {
                 className={`${index === 0 && 'rounded-t-md'} ${
                   index === arr.length - 1 && 'rounded-b-md'
                 } flex items-center gap-3 p-4 hover:bg-primary hover:text-white transition-all ease-in-out duration-300 w-full`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (link.path === '/auth/login') {
+                    localStorage.removeItem('token');
+                    window.location.href = '/auth/login';
+                  }
+                }}
               >
                 <FontAwesomeIcon icon={link?.icon} />
                 <p className="text-[14px]">{link?.label}</p>

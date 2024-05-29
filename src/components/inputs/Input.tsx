@@ -32,7 +32,7 @@ const Input = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`py-[6px] px-3 font-normal placeholder:!font-light  placeholder:text-[13px] text-[14px] flex items-center w-full rounded-lg border-[1.3px] border-dense border-opacity-50 outline-none focus:outline-none focus:border-[1.6px] focus:border-primary ease-in-out duration-50 ${className} ${
+        className={`py-[6px] px-3 font-normal placeholder:!font-light  placeholder:text-[13px] text-[14px] flex items-center w-full rounded-lg border-[1.3px] border-light border-opacity-50 outline-none focus:outline-none focus:border-[1.6px] focus:border-primary ease-in-out duration-50 ${className} ${
           readOnly &&
           '!border-[.1px] !border-background hover:cursor-default focus:!border-background'
         }`}
