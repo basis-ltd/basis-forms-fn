@@ -9,13 +9,17 @@ import {
   faChevronCircleLeft,
   faChevronCircleRight,
   faGear,
+  faUsers,
 } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
   // STATE VARIABLES
   const dispatch: AppDispatch = useDispatch();
   const { isOpen } = useSelector((state: RootState) => state.sidebar);
+
+  // LOCATION
+  const { pathname } = useLocation();
 
   // SIDEBAR LINKS
   const sidebarLinks = [
@@ -25,9 +29,14 @@ const Sidebar = () => {
       icon: faChartSimple,
     },
     {
+      label: 'Institutions',
+      path: '/admin/institutions',
+      icon: faBuildingColumns,
+    },
+    {
       label: 'Users',
       path: '/admin/users',
-      icon: faBuildingColumns,
+      icon: faUsers,
     },
     {
       label: 'Settings',
@@ -66,8 +75,8 @@ const Sidebar = () => {
             <Link
               key={index}
               to={link.path}
-              className={`${
-                isOpen ? 'justify-start' : 'justify-center'
+              className={`${isOpen ? 'justify-start' : 'justify-center'} ${
+                pathname.includes(link?.path) && 'bg-primary text-white'
               } flex items-center gap-3 p-4 px-8 hover:bg-primary hover:text-white transition-all ease-in-out duration-300 w-full`}
             >
               <FontAwesomeIcon icon={link?.icon} />

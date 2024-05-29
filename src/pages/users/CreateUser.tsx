@@ -1,18 +1,34 @@
 import Modal from '@/components/containers/Modal';
 import Button from '@/components/inputs/Button';
+import Combobox from '@/components/inputs/Combobox';
 import Input from '@/components/inputs/Input';
+import Loader from '@/components/inputs/Loader';
 import Select from '@/components/inputs/Select';
 import { ROLES } from '@/constants/auth';
 import { capitalizeString } from '@/helpers/strings';
 import validateInputs from '@/helpers/validations';
+import {
+  useCreateUserMutation,
+  useLazyFetchInstitutionsQuery,
+} from '@/state/api/apiSlice';
+import { setInstitutionsList } from '@/state/features/institutionSlice';
+import { setCreateUserModal, updateUsersList } from '@/state/features/userSlice';
+import { AppDispatch, RootState } from '@/state/store';
+import { Institution } from '@/types/models/institution';
+import { useEffect } from 'react';
 import { Controller, FieldValues, useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { ErrorResponse } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-type CreateUserProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
+const CreateUser = () => {
+  // STATE VARIABLES
+  const dispatch: AppDispatch = useDispatch();
+  const { institutionsList } = useSelector(
+    (state: RootState) => state.institution
+  );
+  const { createUserModal } = useSelector((state: RootState) => state.user);
 
-const CreateUser = ({ isOpen, onClose }: CreateUserProps) => {
   // REACT HOOK FORM
   const {
     control,
@@ -21,16 +37,96 @@ const CreateUser = ({ isOpen, onClose }: CreateUserProps) => {
     trigger,
   } = useForm();
 
+  // INITIALIZE FETCH INSTITUTIONS
+  const [
+    fetchInstitutions,
+    {
+      data: institutionsData,
+      error: institutionsError,
+      isLoading: institutionsIsLoading,
+      isSuccess: institutionsIsSuccess,
+      isError: institutionsIsError,
+    },
+  ] = useLazyFetchInstitutionsQuery();
+
+  // INITIALIZE CREATE USER MUTATION
+  const [
+    createUser,
+    {
+      data: createUserData,
+      error: createUserError,
+      isLoading: createUserIsLoading,
+      isSuccess: createUserIsSuccess,
+      isError: createUserIsError,
+    },
+  ] = useCreateUserMutation();
+
+  // FETCH INSTITUTIONS
+  useEffect(() => {
+    fetchInstitutions({
+      categoryId: undefined,
+    });
+  }, [fetchInstitutions]);
+
   // HANDLE FORM SUBMISSION
   const onSubmit = (data: FieldValues) => {
-    console.log(data);
+    createUser({
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      institutionId: data.institutionId,
+      role: data.role,
+    });
   };
+
+  // HANDLE INSTITUTIONS RESPONSE
+  useEffect(() => {
+    if (institutionsIsError) {
+      if ((institutionsError as ErrorResponse)?.status === 500) {
+        toast.error('Failed to fetch institutions. Please try again later.');
+      } else {
+        toast.error((institutionsError as ErrorResponse)?.data?.message);
+      }
+    } else if (institutionsIsSuccess) {
+      dispatch(setInstitutionsList(institutionsData?.data));
+    }
+  }, [
+    institutionsData,
+    institutionsError,
+    institutionsIsLoading,
+    institutionsIsSuccess,
+    institutionsIsError,
+    dispatch,
+  ]);
+
+  // HANDLE CREATE USER RESPONSE
+  useEffect(() => {
+    if (createUserIsError) {
+      if ((createUserError as ErrorResponse)?.status === 500) {
+        toast.error('Failed to create user. Please try again later.');
+      } else {
+        toast.error((createUserError as ErrorResponse)?.data?.message);
+      }
+    } else if (createUserIsSuccess) {
+      toast.success(
+        'User created successfully. An email containing the login details has been sent to their inbox.'
+      );
+      dispatch(updateUsersList(createUserData?.data));
+      dispatch(setCreateUserModal(false));
+    }
+  }, [
+    createUserIsError,
+    createUserError,
+    createUserIsSuccess,
+    dispatch,
+    createUserData?.data,
+  ]);
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={createUserModal}
       onClose={() => {
-        onClose();
+        dispatch(setCreateUserModal(false));
       }}
       heading="Add new user"
     >
@@ -99,7 +195,17 @@ const CreateUser = ({ isOpen, onClose }: CreateUserProps) => {
           render={({ field }) => {
             return (
               <label className="flex flex-col gap-1 w-full">
-                <Select required label="Institution" {...field} />
+                <Combobox
+                  options={institutionsList?.map((institution: Institution) => {
+                    return {
+                      label: institution.name,
+                      value: institution.id,
+                    };
+                  })}
+                  required
+                  label="Institution"
+                  {...field}
+                />
                 {errors.institutionId && (
                   <p className="text-red-500 text-[12px]">
                     {String(errors.institutionId.message)}
@@ -137,7 +243,7 @@ const CreateUser = ({ isOpen, onClose }: CreateUserProps) => {
           }}
         />
         <Button primary submit>
-          Submit
+          {createUserIsLoading ? <Loader /> : 'Create user'}
         </Button>
       </form>
     </Modal>

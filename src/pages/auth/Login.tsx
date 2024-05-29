@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import Loader from '@/components/inputs/Loader';
 import { useNavigate } from 'react-router-dom';
+import { InputErrorMessage } from '@/components/feedbacks/ErrorLabels';
 
 const Login = () => {
   // REACT HOOK FORM
@@ -107,9 +108,7 @@ const Login = () => {
                     {...field}
                   />
                   {errors.password && (
-                    <p className="text-[13px]">
-                      {String(errors.password.message)}
-                    </p>
+                    <InputErrorMessage message={String(errors.password.message)} />
                   )}
                 </label>
               );

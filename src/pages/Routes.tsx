@@ -6,6 +6,7 @@ import Sidebar from '@/components/navigation/Sidebar';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/state/store';
 import ListUsers from './users/ListUsers';
+import ListInstitutions from './institutions/ListInstitutions';
 
 const Routes = () => {
   // STATE VARIABLES
@@ -16,7 +17,7 @@ const Routes = () => {
   return (
     <main className="w-[100vw] h-full relative">
       <Sidebar />
-      <body
+      <main
         className={`${
           sidebarOpen ? 'w-[80vw] left-[20vw]' : 'w-[95vw] left-[5vw]'
         } absolute transition-all ease-in-out duration-300 p-2 flex flex-col gap-2`}
@@ -28,9 +29,10 @@ const Routes = () => {
             {/* PROTECTED ROUTES */}
             <Route path="/admin/dashboard" element={<SuperAdminDashboard />} />
             <Route path="/admin/users" element={<ListUsers />} />
+            <Route path="/admin/institutions" element={<ListInstitutions />} />
           </Router>
         </section>
-      </body>
+      </main>
     </main>
   );
 };

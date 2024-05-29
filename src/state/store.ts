@@ -3,6 +3,8 @@ import apiSlice from './api/apiSlice';
 import sidebarSlice from './features/sidebarSlice';
 import userSlice from './features/userSlice';
 import paginationSlice from './features/paginationSlice';
+import institutionSlice from './features/institutionSlice';
+import categorySlice from './features/categorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +12,8 @@ export const store = configureStore({
     sidebar: sidebarSlice,
     user: userSlice,
     pagination: paginationSlice,
+    institution: institutionSlice,
+    category: categorySlice,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(apiSlice.middleware);

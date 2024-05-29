@@ -3,14 +3,14 @@ import Loader from '@/components/inputs/Loader';
 import RowSelectionCheckbox from '@/components/table/RowSelectionCheckbox';
 import Table from '@/components/table/Table';
 import { capitalizeString, formatDate } from '@/helpers/strings';
-import { useLazyListUsersQuery } from '@/state/api/apiSlice';
-import { setUsersList } from '@/state/features/userSlice';
+import { useLazyFetchUsersQuery } from '@/state/api/apiSlice';
+import { setCreateUserModal, setUsersList } from '@/state/features/userSlice';
 import { AppDispatch, RootState } from '@/state/store';
 import { User } from '@/types/models/user';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Row, Table as TableType } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
+import { ColumnDef, Row, Table as TableType } from '@tanstack/react-table';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ErrorResponse } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -19,12 +19,11 @@ import CreateUser from './CreateUser';
 const ListUsers = () => {
   // STATE VARIABLES
   const dispatch: AppDispatch = useDispatch();
-  const { usersList } = useSelector((state: RootState) => state.user);
-  const [createUserModal, setCreateUserModal] = useState(false);
+  const { usersList, createUserModal } = useSelector((state: RootState) => state.user);
 
   // INITIALIZE LIST USERS QUERY
   const [
-    listUsers,
+    fetchUsers,
     {
       data: usersData,
       error: usersError,
@@ -32,16 +31,16 @@ const ListUsers = () => {
       isError: usersIsError,
       isSuccess: usersIsSuccess,
     },
-  ] = useLazyListUsersQuery();
+  ] = useLazyFetchUsersQuery();
 
   // FETCH USERS
   useEffect(() => {
-    listUsers({
+    fetchUsers({
       take: 10,
       skip: 0,
-      role: 'admin',
+      role: undefined,
     });
-  }, [listUsers]);
+  }, [fetchUsers]);
 
   // HANDLE FETCH USERS RESPONSE
   useEffect(() => {
@@ -120,19 +119,19 @@ const ListUsers = () => {
   ];
 
   return (
-    <main className="flex flex-col gap-4">
+    <main className="flex flex-col gap-4 w-full">
       <menu className="flex items-center gap-3 justify-between">
-        <h1 className="text-xl font-bold">Users</h1>
+        <h1 className="text-lg font-semibold uppercase">Users</h1>
         <Button
           onClick={(e) => {
             e.preventDefault();
-            setCreateUserModal(true);
+            dispatch(setCreateUserModal(true));
           }}
-          className='!gap-2'
+          className="!gap-2"
           primary
         >
           <FontAwesomeIcon icon={faPlus} />
-          <p className='text-[14px]'>Add User</p>
+          <p className="text-[14px]">Add User</p>
         </Button>
       </menu>
       {usersIsLoading ? (
@@ -153,11 +152,28 @@ const ListUsers = () => {
                 updatedAt: formatDate(user.updatedAt),
               };
             })}
-            columns={usersColumns}
+            columns={
+              usersColumns as unknown as ColumnDef<
+                {
+                  name: string;
+                  no: number;
+                  institution: string;
+                  role: string;
+                  createdAt: string;
+                  updatedAt: string;
+                  id: string;
+                  firstName: string;
+                  lastName: string;
+                  email: string;
+                  institutionId: string;
+                },
+                unknown
+              >[]
+            }
           />
         </section>
       )}
-      <CreateUser isOpen={createUserModal} onClose={() => setCreateUserModal(false)} />
+      {createUserModal && <CreateUser />}
     </main>
   );
 };
